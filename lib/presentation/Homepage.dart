@@ -3,6 +3,7 @@ import 'package:bloc_app/data/model/product_list_entity.dart';
 import 'package:bloc_app/domain/ProductBloc.dart';
 import 'package:bloc_app/domain/ProductEvent.dart';
 import 'package:bloc_app/domain/ProductStates.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,8 +11,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /*
 Multi Bloc Provider
 */
+
 class HomePage extends StatelessWidget {
   final ProductRepository productRepository;
+
   const HomePage({
     super.key,
     required this.productRepository,
@@ -27,8 +30,7 @@ class HomePage extends StatelessWidget {
               create: (BuildContext context) => ProductBLoc(productRepository),
             )
           ],
-          child:
-          MaterialApp(
+          child: MaterialApp(
               title: 'Flutter Demo',
               theme: ThemeData(
                 colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -39,18 +41,14 @@ class HomePage extends StatelessWidget {
                   title: const Text('Zara'),
                 ),
                 body: blocBody(),
-              ))
-
-
-
-      ),
+              ))),
     );
   }
 
   Widget blocBody() {
     return BlocProvider(
       create: (context) => ProductBLoc(
-        ProductRepository(),
+        productRepository,
       )..add(LoadProductEvent()),
       child: BlocConsumer<ProductBLoc, ProductStates>(
         listener: (context, state) {},
@@ -80,10 +78,25 @@ class HomePage extends StatelessWidget {
                             style: TextStyle(color: Colors.greenAccent),
                           ),
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                state.products.products?[index].thumbnail ??
-                                    ''),
-                          ),
+                              child: ClipOval(
+                            child: CachedNetworkImage(
+                              width: MediaQuery.of(context).size.width,
+                              height: 130.0,
+                              fit: BoxFit.cover,
+                              imageUrl:
+                                  state.products.products?[index].thumbnail ??
+                                      '',
+                              placeholder: (context, url) => Center(
+                                  widthFactor: 14,
+                                  heightFactor: 14,
+                                  child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) => const Icon(
+                                Icons.flutter_dash_rounded,
+                                size: 100,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )),
                         ),
                       ));
                 });
