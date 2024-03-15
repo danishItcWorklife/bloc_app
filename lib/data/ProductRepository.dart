@@ -7,29 +7,29 @@ import 'package:hive/hive.dart';
 
 class ProductRepository {
   final DataProvider _dataProvider;
-  final Box<ProductListEntity?> postsBox;
+  final Box<ProductListEntity?> productsBox;
 
-  ProductRepository({DataProvider? dataProvider, required this.postsBox})
-      : _dataProvider = dataProvider ?? DataProvider(postsBox: postsBox);
+  ProductRepository({DataProvider? dataProvider, required this.productsBox})
+      : _dataProvider = dataProvider ?? DataProvider(productsBox: productsBox);
 
   Future<ProductListEntity> getProductList() async {
     final products = await _dataProvider.fetchProducts();
     return products;
   }
 
-  Stream<ProductListEntity> getProductListStream() {
-    final products = _dataProvider.fetchProductsStream();
-    return products;
-  }
+  // Stream<ProductListEntity> getProductListStream() {
+  //   final products = _dataProvider.fetchProductsStream();
+  //   return products;
+  // }
 
-  Future<void> savePostsLocally({
-    required ProductListEntity posts,
+  Future<void> saveProductsLocally({
+    required ProductListEntity products,
   }) async {
-    _dataProvider.savePostsLocally(posts: posts);
+    _dataProvider.saveProductsLocally(products: products);
   }
 
-  Future<ProductListEntity?> fetchAllLocalPosts() async {
-    final products = _dataProvider.fetchAllLocalPosts();
+  Future<ProductListEntity?> fetchAllLocalProducts() async {
+    final products = _dataProvider.fetchAllLocalProducts();
     return products;
   }
 }

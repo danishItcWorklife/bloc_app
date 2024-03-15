@@ -7,6 +7,26 @@ export 'package:bloc_app/generated/json/product_list_entity.g.dart';
 
 part 'product_list_entity.g.dart';
 
+//Serialization
+//Conversion of data object to binary
+//Serialization involves converting Dart objects into JSON format
+
+//DeSerialization
+//Conversion of binary to data object
+//DeSerialization involves converting JSON format into Dart objects
+
+//Add the @HiveType() annotation:
+//This tells Hive this class is a data model that can be stored and retrieved.
+
+//Add @HiveField() annotation to each field:
+//This annotation specifies the Hive key for the fields of data model class.
+
+//typeId
+//If another adapter with same
+// typeId had been already registered an exception will thrown or the adapter
+// will be overridden if [override] set to `true`
+
+
 @JsonSerializable()
 @HiveType(typeId: 0)
 class ProductListEntity extends HiveObject {

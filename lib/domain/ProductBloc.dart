@@ -14,15 +14,22 @@ class ProductBLoc extends Bloc<ProductEvent, ProductStates> {
     on<LoadProductEvent>((event, emit) async {
       emit(ProductLoadingState());
       try {
+        //Check internet connection
          bool isConnected = await InternetConnectionChecker.hasConnection();
          if (isConnected) {
+           //fetch data from api
         final serverResponse = await _productRepository.getProductList();
-        await _productRepository.savePostsLocally(posts: serverResponse);
-        final localPosts = await _productRepository.fetchAllLocalPosts();
-        emit(ProductLoadedStates(localPosts!));
+        //save the data in hive local db
+        await _productRepository.saveProductsLocally(products: serverResponse);
+        // read the data from hive local db
+        final localProducts = await _productRepository.fetchAllLocalProducts();
+       //Display the data in presentation layer (UI)
+        emit(ProductLoadedStates(localProducts!));
         } else {
-          final localPosts = await _productRepository.fetchAllLocalPosts();
-          emit(ProductLoadedStates(localPosts!));
+           //read the data from hive local db
+          final localProducts = await _productRepository.fetchAllLocalProducts();
+          //Display the data in presentation layer (UI)
+          emit(ProductLoadedStates(localProducts!));
         }
         // print(products);
       } catch (e) {
